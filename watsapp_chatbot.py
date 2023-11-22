@@ -1,10 +1,10 @@
+import asyncio
+from cleverbotfree import CleverbotAsync
+from cleverbotfree import Cleverbot
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-# import sys
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
 
 class WhatsappChatbot:
@@ -107,29 +107,37 @@ class WhatsappChatbot:
 
 
 if __name__ == '__main__':
+    @Cleverbot.connect
+    def cleverbot_chat(bot, user_prompt, bot_prompt) -> str:
+        """Example code using cleverbotfree sync api with decorator."""
+        while True:
+            user_input = input(user_prompt)
+            if user_input == "quit":
+                break
+            reply = bot.single_exchange(user_input)
+            print(bot_prompt, reply)
+        bot.close()
+        return reply
+
     # Variables and components
     refresh_sleep = 1
     last_message = ""  # Last message sent in the selected chat
-    bot = WhatsappChatbot()
-    chatbot_name = "Chatty"
-    chatbot = ChatBot(chatbot_name)
-    trainer = ChatterBotCorpusTrainer(chatbot)
-    trainer.train("chatterbot.corpus.italian")
-    bot.login()
+    w_bot = WhatsappChatbot()
+    w_bot.login()
 
     presentation = input("Presentation? ")
 
     if presentation == 'y':
-        bot.send_message("Ciao! Sono, l'aiutante di Francesco fatto per chattare con te!")
-        bot.send_message("Per mandarmi un messagio scrivi una frase preceduta da '!'")
+        w_bot.send_message("Ciao! Sono, l'aiutante di Francesco fatto per chattare con te!")
+        w_bot.send_message("Per mandarmi un messagio scrivi una frase preceduta da '!'")
 
     while True:
-        last_message = bot.last_message()
+        last_message = w_bot.last_message()
         if last_message == 'quit':
-            bot.send_message("Arrivederci!")
+            w_bot.send_message("Arrivederci!")
             break
 
-        if bot.is_for_bot(last_message):
+        if w_bot.is_for_bot(last_message):
             last_message = last_message[1:]
             print("User: " + last_message)
             response = chatbot.get_response(last_message)
