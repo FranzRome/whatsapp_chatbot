@@ -106,32 +106,32 @@ class WhatsappChatbot:
             return False
 
 
-# Variables and components
-refresh_sleep = 1
-last_message = ""  # Last message sent in the selected chat
-bot = WhatsappChatbot()
-chatbot_name = "Chatty"
-chatbot = ChatBot(chatbot_name)
-trainer = ChatterBotCorpusTrainer(chatbot)
-trainer.train("chatterbot.corpus.italian")
-bot.login()
+if __name__ == '__main__':
+    # Variables and components
+    refresh_sleep = 1
+    last_message = ""  # Last message sent in the selected chat
+    bot = WhatsappChatbot()
+    chatbot_name = "Chatty"
+    chatbot = ChatBot(chatbot_name)
+    trainer = ChatterBotCorpusTrainer(chatbot)
+    trainer.train("chatterbot.corpus.italian")
+    bot.login()
 
+    presentation = input("Presentation? ")
 
-presentation = input("Presentation? ")
+    if presentation == 'y':
+        bot.send_message("Ciao! Sono, l'aiutante di Francesco fatto per chattare con te!")
+        bot.send_message("Per mandarmi un messagio scrivi una frase preceduta da '!'")
 
-if presentation == 'y':
-    bot.send_message("Ciao! Sono, l'aiutante di Francesco fatto per chattare con te!")
-    bot.send_message("Per mandarmi un messagio scrivi una frase preceduta da '!'")
+    while True:
+        last_message = bot.last_message()
+        if last_message == 'quit':
+            bot.send_message("Arrivederci!")
+            break
 
-while True:
-    last_message = bot.last_message()
-    if last_message == 'quit':
-        bot.send_message("Arrivederci!")
-        break
-
-    if bot.is_for_bot(last_message):
-        last_message = last_message[1:]
-        print("User: " + last_message)
-        response = chatbot.get_response(last_message)
-        # print("CleverBot: " + response)
-        bot.send_message(response)
+        if bot.is_for_bot(last_message):
+            last_message = last_message[1:]
+            print("User: " + last_message)
+            response = chatbot.get_response(last_message)
+            # print("CleverBot: " + response)
+            bot.send_message(response)
