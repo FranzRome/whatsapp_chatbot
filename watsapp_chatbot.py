@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 # import sys
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
@@ -31,7 +32,7 @@ class WhatsappChatbot:
 
     def search_in_wiki(self, search):
         driver = self.driver
-        search_bar = driver.find_element_by_xpath("//input[@id='searchInput']")
+        search_bar = driver.find_element(By.XPATH, "//input[@id='searchInput']")
         search_bar.clear()
         search_bar.send_keys(search)
         search_bar.send_keys(Keys.ENTER)
@@ -39,7 +40,7 @@ class WhatsappChatbot:
         # driver.find_element_by_xpath("//a[@title='"+ search +"']").click()
 
     def is_search_result(self):
-        return len(self.driver.find_elements_by_xpath("//a[@data-serp-pos='0']")) > 0
+        return len(self.driver.find_elements(By.XPATH, "//a[@data-serp-pos='0']")) > 0
 
     def open_google_tab(self):
         self.new_tab("https://www.google.it/")
@@ -47,7 +48,7 @@ class WhatsappChatbot:
     def wiki_text(self, iterations):
         text = ""
         driver = self.driver
-        elements = driver.find_elements_by_tag_name("p")
+        elements = driver.find_elements(By.TAG_NAME, "p")
         for i in range(iterations):
             text += elements[i].text
 
@@ -65,7 +66,7 @@ class WhatsappChatbot:
         actions = ActionChains(driver)
 
         print("searching for " + name)
-        elem = self.driver.find_element_by_xpath("//input[@class='jN-F5 copyable-text selectable-text']")
+        elem = self.driver.find_element(By.XPATH, "//input[@class='jN-F5 copyable-text selectable-text']")
         elem.clear()
         actions.click(elem)
         actions.perform()
@@ -73,12 +74,12 @@ class WhatsappChatbot:
 
     def open_chat_first_chat(self):
         driver = self.driver
-        elem = driver.find_element_by_xpath("//div[@class='_2wP_Y']")
+        elem = driver.find_element(By.XPATH, "//div[@class='_2wP_Y']")
         elem.click()
 
     def send_message(self, msg: str):
         driver = self.driver
-        web_obj = driver.find_element_by_xpath("/html/body/div/div[1]/div[1]/div[4]/div[1]/"
+        web_obj = driver.find_element(By.XPATH, "/html/body/div/div[1]/div[1]/div[4]/div[1]/"
                                                "footer/div[1]/div[2]/div/div[2]")
         web_obj.send_keys(str(msg))
         web_obj.send_keys(Keys.RETURN)
@@ -86,7 +87,7 @@ class WhatsappChatbot:
     # Read the last message in the selected chat
     def last_message(self):
         driver = self.driver
-        elements = driver.find_elements_by_xpath("//span[@class='_3-8er selectable-text copyable-text']")
+        elements = driver.find_elements(By.XPATH, "//span[@class='_3-8er selectable-text copyable-text']")
         # print(len(elements))
         return str(elements[-1].text)
 
